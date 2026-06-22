@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ocean-Победа — КегМастер</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="logo.jpg" class="logo-img" alt="Ocean-Победа">
+        <div class="logo-text-wrap">
+          <span class="logo-name">OCEAN-ПОБЕДА</span>
+          <span class="logo-sub">контроль сроков годности</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <button class="btn btn-ghost" id="btnNotifyNow" title="Отправить уведомление сейчас">📩 Уведомить</button>
+        <button class="btn btn-primary" id="btnAddProduct">+ Добавить товар</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- STATS -->
+    <section class="stats-row" id="statsRow"></section>
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner" id="alertBanner" style="display:none"></div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <input class="toolbar-search" id="searchInput" type="text" placeholder="🔍 Поиск товара...">
+      <select class="toolbar-select" id="filterStatus">
+        <option value="all">Все статусы</option>
+        <option value="expired">Истёк срок</option>
+        <option value="warning">Скоро истекает</option>
+        <option value="ok">В норме</option>
+      </select>
+      <select class="toolbar-select" id="sortBy">
+        <option value="expiry">По сроку</option>
+        <option value="name">По названию</option>
+        <option value="category">По категории</option>
+        <option value="qty">По количеству</option>
+      </select>
+    </div>
+
+    <!-- CATEGORY TABS -->
+    <div class="cat-tabs" id="catTabs"></div>
+
+    <!-- PRODUCT GRID -->
+    <div class="grid" id="productGrid">
+      <div class="loading">⏳ Загрузка...</div>
+    </div>
+
+  </main>
+
+  <!-- ADD/EDIT MODAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 class="modal-title" id="modalTitle">Добавить товар</h2>
+        <button class="modal-close" id="btnCloseModal">×</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Фото товара</label>
+        <div class="photo-drop" id="photoDrop">
+          <div class="photo-drop-icon">📷</div>
+          <div class="photo-drop-text">Нажмите или перетащите фото<br><small>JPG, PNG, WEBP</small></div>
+          <input type="file" id="photoInput" accept="image/*">
+        </div>
+        <img id="photoPreview" class="photo-preview" alt="">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Название товара *</label>
+        <input class="form-input" id="fName" placeholder="Например: Балтика 3 светлое 0.5л">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Категория *</label>
+          <select class="form-input" id="fCategory">
+            <option value="">Выберите...</option>
+            <option value="Пиво фасовка">🍺 Пиво фасовка</option>
+            <option value="Пиво розлив">🍻 Пиво розлив</option>
+            <option value="Вода и напитки">💧 Вода и напитки</option>
+            <option value="Сухарики">🥨 Сухарики</option>
+            <option value="Чипсы">🥔 Чипсы</option>
+            <option value="Сладкое">🍬 Сладкое</option>
+            <option value="Снеки и закуски">🥜 Снеки и закуски</option>
+            <option value="Рыба и морепродукты">🐟 Рыба и морепродукты</option>
+            <option value="Слабоалкогольные">🍹 Слабоалкогольные</option>
+            <option value="Безалкогольное пиво">🥛 Безалкогольное пиво</option>
+            <option value="Другое">📦 Другое</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Хранение</label>
+          <select class="form-input" id="fStorage">
+            <option value="Холодильник">🧊 Холодильник</option>
+            <option value="Полка">📦 Полка</option>
+            <option value="Кег">🛢️ Кег</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Срок годности до *</label>
+          <input class="form-input" type="date" id="fExpiry">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Количество (шт) *</label>
+          <input class="form-input" type="number" id="fQty" min="1" placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Цена (₽)</label>
+          <input class="form-input" type="number" id="fPrice" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Место / полка</label>
+          <input class="form-input" id="fLocation" placeholder="А1, холодильник №2...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Примечание</label>
+        <input class="form-input" id="fNote" placeholder="Акция, важная информация...">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btnCancelModal">Отмена</button>
+        <button class="btn btn-primary" id="btnSaveProduct">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
